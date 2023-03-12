@@ -24,9 +24,9 @@ char *last_dir(char *path) {
         last_path_buf[b] = path[last_slash + b + 1];
     }
 
-    printf("%s\n", last_path_buf);
-
     if (verbose) {
+        printf("%s\n", last_path_buf);
+
         printf("%s\n", path);
 
         for (int a = 0; a < last_slash; a++) {
