@@ -2,7 +2,27 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
+
+#define USERNAME "JakeRoggenbuck"
+
+void add_build_flag(char *output, int n, char *username, char *project_name) {
+
+    int proj_len = strlen(project_name);
+    int uname_len = strlen(username);
+
+    if (n < proj_len + uname_len + 146) {
+        printf("Not enough space in build flag string.\n");
+        exit(1);
+    }
+
+    sprintf(output,
+            "[![Build](https://img.shields.io/github/actions/workflow/status/"
+            "%s/%s/rust.yml?branch=main&style=for-the-badge)](https://"
+            "github.com/%s/%s/actions)",
+            username, project_name, username, project_name);
+}
 
 void usage() { printf("usage: readme [options]\n"); }
 
@@ -40,7 +60,7 @@ char *last_dir(char *path, bool verbose) {
     return last_path_buf;
 }
 
-void create_readme(char *fname, bool verbose) {
+void create_readme(char *fname, bool verbose, bool should_add_build_flag) {
     char cwd[PATH_MAX];
 
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
@@ -61,6 +81,16 @@ void create_readme(char *fname, bool verbose) {
         fputs("# ", f);
         fputs(dirname, f);
         fputs("\n", f);
+
+        if (should_add_build_flag) {
+            fputs("\n", f);
+
+            char build_flag[512];
+            add_build_flag(build_flag, 512, USERNAME, dirname);
+
+            fputs(build_flag, f);
+            fputs("\n", f);
+        }
     } else {
         perror("getcwd() error.\n");
     }
@@ -69,11 +99,12 @@ void create_readme(char *fname, bool verbose) {
 int main() {
     char *fname = "README.md";
     bool verbose = false;
+    bool should_add_build_flag = true;
 
     if (access(fname, F_OK) == 0) {
         printf("%s already exists.\n", fname);
     } else {
-        create_readme(fname, verbose);
+        create_readme(fname, verbose, should_add_build_flag);
     }
 
     return 0;
