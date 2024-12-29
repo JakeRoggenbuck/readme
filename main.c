@@ -43,6 +43,11 @@ char *last_dir(char *path, bool verbose) {
     last_path_len = (i - last_slash) + 1;
     last_path_buf = malloc(last_path_len * sizeof(char));
 
+    if (last_path_buf == NULL) {
+        fprintf(stderr, "Malloc failed.\n");
+        exit(1);
+    }
+
     for (int b = 0; b < last_path_len; b++) {
         last_path_buf[b] = path[last_slash + b + 1];
     }
