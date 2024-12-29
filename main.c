@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #define USERNAME "JakeRoggenbuck"
+#define WORKFLOW_NAME "build"
 
 void add_build_flag(char *output, int n, char *username, char *project_name) {
 
@@ -19,9 +20,9 @@ void add_build_flag(char *output, int n, char *username, char *project_name) {
 
     sprintf(output,
             "[![Build](https://img.shields.io/github/actions/workflow/status/"
-            "%s/%s/rust.yml?branch=main&style=for-the-badge)](https://"
+            "%s/%s/%s.yml?branch=main&style=for-the-badge)](https://"
             "github.com/%s/%s/actions)",
-            username, project_name, username, project_name);
+            username, project_name, WORKFLOW_NAME, username, project_name);
 }
 
 void usage() { printf("usage: readme [options]\n"); }
